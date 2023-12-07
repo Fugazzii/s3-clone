@@ -5,16 +5,22 @@ import { userExists, validateUserPayload } from "../utils";
 
 export const handleNewUser = (
 	newUser: Omit<User, "id">
-): Result<User, string> => {
-	return validateUserPayload(newUser)
-		.andThen(() => userExists(newUser.email))
-		.map(() => {
-			const user: User = {
+): User => {
+
+	const result: Result<User, Error> = validateUserPayload(newUser)
+		.andThen<boolean>(() => userExists(newUser.username))
+		.map<User>(() => {
+			return {
 				...newUser,
 				id: randomUUID(),
-			};
-			return user;
+			} as User;
 		});
+
+	const addedUser = result.unwrapOrElse((err: Error) => {
+		throw err;
+	});
+
+	return addedUser;
 };
 
 export const authorizeOwner = (

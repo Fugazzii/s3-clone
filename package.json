@@ -13,6 +13,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@sniptt/monads": "^0.5.10"
+    "@sniptt/monads": "^0.5.10",
+    "jsonwebtoken": "^9.0.2"
   }
 }
