@@ -14,7 +14,9 @@ export const validateUserPayload = (
 	return Ok(null);
 };
 
-export const userExists = (username: string): Result<boolean, Error> => {
+export const userExists = (
+	username: string
+): Result<boolean, unknown> => {
 	try {
 		const targetDir = path.join(STORAGE_DIR, username);
 		const dirExists = fs.existsSync(targetDir);
@@ -25,7 +27,9 @@ export const userExists = (username: string): Result<boolean, Error> => {
 	}
 };
 
-export const createUser = (newUser: Omit<User, "id">): Result<null, Error> => {
+export const createUser = (
+	newUser: Omit<User, "id">
+): Result<null, unknown> => {
 	try {
 		const dir = path.join(STORAGE_DIR, newUser.username);
 		fs.mkdirSync(dir, { recursive: true });

@@ -8,7 +8,7 @@ export const handleNewBucket = (
 	newBucketOptions: Omit<Bucket, "id">
 ): Bucket => {
 
-	const result: Result<Bucket, Error> = validateBucketPayload(newBucketOptions)
+	const result: Result<Bucket, unknown> = validateBucketPayload(newBucketOptions)
 		.andThen<boolean>(() => authorizeOwner(token, newBucketOptions.owner))
 		.andThen<boolean>(() => hasUniqueName(newBucketOptions.name))
 		.andThen<Bucket>(() => createBucket(newBucketOptions));
