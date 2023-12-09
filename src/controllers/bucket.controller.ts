@@ -1,7 +1,7 @@
 import { Result } from "@sniptt/monads";
 import { Bucket } from "../types";
 import { validateBucketPayload, hasUniqueName, createBucket } from "../services/bucket.services";
-import { authorizeOwner } from "./user.controller";
+import { authorizeOwner } from "./user.controllers";
 
 export const handleNewBucket = (
 	token: string,

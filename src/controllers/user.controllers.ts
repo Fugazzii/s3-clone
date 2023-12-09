@@ -1,10 +1,9 @@
-import { randomUUID } from "node:crypto";
 import { Ok, Result } from "@sniptt/monads";
 import { NextFunction, Request, Response } from "express";
 import { User, ResponseObject, Success, Failure } from "../types";
 import { createUser } from "../services";
 
-export const newUserController = (
+export const createUserHandler = (
 	req: Request,
 	res: Response,
 	_next: NextFunction

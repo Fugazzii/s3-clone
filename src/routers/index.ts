@@ -1,0 +1,1 @@
+export * as MainRouter from "./main.routes";

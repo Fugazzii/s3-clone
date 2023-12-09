@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext"],
+    "lib": [
+      "ESNext"
+    ],
     "module": "esnext",
     "target": "esnext",
     "moduleResolution": "bundler",
@@ -16,7 +18,27 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "types": [
-      "bun-types" // add Bun global
-    ]
+      "bun-types"
+    ],
+    "paths": {
+      "@controllers": [
+        "./src/controllers"
+      ],
+      "@constants": [
+        "./src/constants"
+      ],
+      "@routers": [
+        "./src/routers"
+      ],
+      "@services": [
+        "./src/services"
+      ],
+      "@repositories": [
+        "./src/repositories"
+      ],
+      "@utils": [
+        "./src/utils"
+      ]
+    }
   }
 }
