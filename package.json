@@ -4,9 +4,11 @@
   "type": "module",
   "scripts": {
     "dev": "bun run ./src/main.ts",
-    "start:dev": "bun --watch ./src/main.ts",
+    "dev:watch": "bun --watch ./src/main.ts",
     "test": "bun test",
-    "test:watch": "bun test --watch"
+    "test:watch": "bun test --watch",
+    "start": "bun run test && bun run dev",
+    "start:watch": "npm run dev:watch & npm run test:watch"
   },
   "devDependencies": {
     "bun-types": "latest"

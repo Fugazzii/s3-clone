@@ -10,7 +10,9 @@ function main(port: number, host: string) {
 	app.use(cors(Options.corsOptions));
 	app.use(express.json(Options.expressJsonOptions));
 
-	MainRouter.init();
+	const router = MainRouter.init();
+
+	app.use("/", router);
 
 	app.listen(port, host, () => log(`🚀 Server is listening on http://${host}:${port}`));
 }

@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { CreateUserDto } from "../dtos/user.dtos";
 import { userExists, validateUserPayload } from "./user.services";
 
-describe("Test service", () => {
+describe("User Services", () => {
 
 	const mockCreateUserData: CreateUserDto = {
 		email: "mgeli@xrova.com",
@@ -10,27 +10,27 @@ describe("Test service", () => {
 		username: "wolf"
 	};
 
-	test("Testing validating user", () => {
+	test("validating_user (should not fail)", () => {
 		const actualResult = validateUserPayload(mockCreateUserData);
 		expect(actualResult.isErr()).toEqual(false);
-		expect(actualResult.unwrap()).toEqual(true);
+		expect(actualResult.unwrap()).toEqual(mockCreateUserData.username);
 	});
 
-	test("Testing validating user with missing username", () => {
+	test("validating_user (should fail)", () => {
 		const badRequest = { ...mockCreateUserData, username: null };
 		const actualResult = validateUserPayload(badRequest);
 		expect(actualResult.isErr()).toEqual(true);
-		expect(actualResult.unwrapErr()).toEqual(false);
+		expect(actualResult.unwrapErr()).toEqual("");
 	});
 
-	test("Testing userExists function", () => {
-		const result = userExists(mockCreateUserData);
+	test("check_user_existence (should exist)", () => {
+		const result = userExists(mockCreateUserData.username);
 		expect(result).toBe(true);
 	});
 
-	test("Testing userExists function failure", () => {
-		const badRequest = { ...mockCreateUserData, username: "fakename" };
-		const result = userExists(badRequest);
+	test("check_user_existence (should not exist)", () => {
+		const result = userExists("new_wolf");
 		expect(result).toBe(false);
 	});
+
 });
