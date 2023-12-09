@@ -1,23 +1,22 @@
 import { Err, Ok } from "@sniptt/monads";
 import fs from "node:fs";
-import { complement, concat, ifElse, isNil, join, pipe, prop, useWith } from "ramda";
+import { concat, ifElse, isNil, join, pipe, prop, useWith } from "ramda";
+import path from "path";
 
 const STORAGE_DIR = "storage";
 
-const validateUserPayload = pipe(
+export const validateUserPayload = pipe(
 	prop("username"),
-	complement(isNil),
 	ifElse(
 		isNil,
-		() => Err("Username is required"),
-		() => Ok(null)
+		() => Err(false),
+		() => Ok(true)
 	)
 );
 
-const userExists = pipe(
+export const userExists = pipe(
 	prop("username"),
-	join("/"),
-	concat(STORAGE_DIR),
+	(username: string) => path.join(STORAGE_DIR, username),
 	useWith(fs.existsSync, [String])
 );
 
