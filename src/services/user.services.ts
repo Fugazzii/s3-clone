@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { Err, Ok, Result } from "@sniptt/monads";
-import { ifElse, isNil, pipe, prop, tap, tryCatch, useWith } from "ramda";
+import { ifElse, isNil, pipe, prop, tryCatch, useWith } from "ramda";
 
 const STORAGE_DIR = "storage";
 
@@ -29,18 +29,21 @@ export const createUser = pipe(
 	validateUserPayload,
 	(result: Result<unknown, unknown>) =>
 		result.andThen((username: unknown) => {
-			try {
-				const exists: boolean = userExists(username as string);
-				return Ok(exists);
-			} catch (error) {
-				return Err(error);
-			}
-		}).andThen((exists: unknown) => {
+			const handleUserExistence = tryCatch(
+				() => userExists(username as string),
+				() => false
+			);
+
+			const exists = handleUserExistence();
 			if (exists) {
 				return Err(`User folder already exists for ${result.unwrap()}`);
-			} else {
-				const created: string | undefined = createUserFolder(result.unwrap() as string);
-				return Ok(created);
 			}
+
+			const handleFileCreation = tryCatch(
+				() => Ok(createUserFolder(username as string) as string),
+				(err: unknown) => Err(`Could not create file ${err}`)
+			);
+
+			return handleFileCreation();
 		})
 );
