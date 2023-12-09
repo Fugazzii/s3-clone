@@ -4,24 +4,8 @@ export const readDir = (
 	dirPath: string
 ): Promise<Array<string>> =>
 	new Promise((resolve, reject) => {
-		fs.readdir(dirPath, (err, files) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(files);
-			}
-		});
-	});
-
-export const statFile = (
-	filePath: string
-): Promise<fs.Stats> =>
-	new Promise((resolve, reject) => {
-		fs.stat(filePath, (err, stats) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(stats);
-			}
-		});
+		fs.readdir(
+			dirPath,
+			(err, files) => err ? reject(err) : resolve(files)
+		);
 	});

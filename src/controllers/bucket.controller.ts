@@ -1,13 +1,12 @@
 import { Result } from "@sniptt/monads";
 import { Bucket } from "../types";
-import { createBucket, hasUniqueName, validateBucketPayload } from "../utils/bucket.utils";
-import { authorizeOwner } from "./user.handler";
+import { validateBucketPayload, hasUniqueName, createBucket } from "../services/bucket.services";
+import { authorizeOwner } from "./user.controller";
 
 export const handleNewBucket = (
 	token: string,
 	newBucketOptions: Omit<Bucket, "id">
 ): Bucket => {
-
 	const result: Result<Bucket, unknown> = validateBucketPayload(newBucketOptions)
 		.andThen<boolean>(() => authorizeOwner(token, newBucketOptions.owner))
 		.andThen<boolean>(() => hasUniqueName(newBucketOptions.name))
@@ -18,5 +17,4 @@ export const handleNewBucket = (
 	});
 
 	return createdBucket;
-
 };
