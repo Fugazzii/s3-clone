@@ -7,7 +7,7 @@ describe("User Services", () => {
 	test("validating_user (should not fail)", () => {
 		const actualResult = UserService.validateUserPayload(UserMocks.createUserDto);
 		expect(actualResult.isErr()).toEqual(false);
-		expect(actualResult.unwrap()).toEqual(UserMocks.createUserDto.username);
+		expect(actualResult.unwrap()).toEqual(UserMocks.createUserDto);
 	});
 
 	test("validating_user (should fail)", () => {
@@ -22,7 +22,7 @@ describe("User Services", () => {
 	});
 
 	test("check_user_existence (should not exist)", () => {
-		const result = UserService.userExists("new_wolf");
+		const result = UserService.userExists(UserMocks.invalidCreateUserDto.username);
 		expect(result).toBe(false);
 	});
 

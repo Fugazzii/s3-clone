@@ -2,48 +2,48 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { Err, Ok, Result } from "@sniptt/monads";
-import { ifElse, isNil, pipe, prop, tryCatch, useWith } from "ramda";
+import { pipe, tryCatch } from "ramda";
+import { UserRepository } from "@repositories";
+import { CreateUserDto } from "@dtos";
+import { handleResult } from "@utils";
 
 const STORAGE_DIR = "storage";
 
-export const validateUserPayload = pipe(
-	prop("username"),
-	ifElse(
-		isNil,
-		() => Err(""),
-		Ok
-	)
-);
+const joinStorageDir = (p: string): string => path.join(STORAGE_DIR, p);
 
-export const userExists = pipe(
-	(username: string) => path.join(STORAGE_DIR, username),
-	useWith(fs.existsSync, [String])
-);
+const userExists = (username: string): boolean => fs.existsSync(joinStorageDir(username));
 
-export const createUserFolder = pipe(
-	(username: string) => path.join(STORAGE_DIR, username),
-	(p: string) => fs.mkdirSync(p, { recursive: true })
-);
+const validateUserPayload = (dto: CreateUserDto): Result<CreateUserDto, string> =>
+	dto.username ? Ok(dto) : Err("Username is required");
 
-export const create = pipe(
+const createUserFolderIfExists = (dto: CreateUserDto): Result<CreateUserDto, string> => {
+	const exists = userExists(dto.username);
+
+	return exists
+		? Err(`User folder already exists for ${dto.username}`)
+		: tryCatch<() => Result<CreateUserDto, never>, Result<never, string>>(
+			() => {
+				fs.mkdirSync(joinStorageDir(dto.username), { recursive: true });
+				return Ok(dto);
+			},
+			(err: unknown) => Err(`Could not create file ${err}`)
+		)();
+};
+
+const create = pipe(
 	validateUserPayload,
-	(result: Result<unknown, unknown>) =>
-		result.andThen((username: unknown) => {
-			const handleUserExistence = tryCatch(
-				() => userExists(username as string),
-				() => false
-			);
-
-			const exists = handleUserExistence();
-			if (exists) {
-				return Err(`User folder already exists for ${result.unwrap()}`);
-			}
-
-			const handleFileCreation = tryCatch(
-				() => Ok(createUserFolder(username as string) as string),
-				(err: unknown) => Err(`Could not create file ${err}`)
-			);
-
-			return handleFileCreation();
-		})
+	handleResult,
+	createUserFolderIfExists,
+	(result: Result<CreateUserDto, string>) => {
+		const data = result.unwrap();
+		UserRepository.create(data);
+		return result;
+	}
 );
+
+export {
+	userExists,
+	validateUserPayload,
+	createUserFolderIfExists,
+	create
+};
