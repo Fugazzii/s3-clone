@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { MainRouter } from "@routers";
+import { UserRouter } from "@routers";
 import { Options } from "@constants";
 import { log } from "console";
 
@@ -10,9 +10,9 @@ function main(port: number, host: string) {
 	app.use(cors(Options.corsOptions));
 	app.use(express.json(Options.expressJsonOptions));
 
-	const router = MainRouter.init();
+	const userRouter = UserRouter.init();
 
-	app.use("/", router);
+	app.use("/", userRouter);
 
 	app.listen(port, host, () => log(`🚀 Server is listening on http://${host}:${port}`));
 }
