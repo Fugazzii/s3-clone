@@ -1,0 +1,1 @@
+export * as BucketRepository from "./bucket.repository";
