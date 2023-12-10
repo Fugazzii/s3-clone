@@ -25,7 +25,7 @@ export const createUserFolder = pipe(
 	(p: string) => fs.mkdirSync(p, { recursive: true })
 );
 
-export const createUser = pipe(
+export const create = pipe(
 	validateUserPayload,
 	(result: Result<unknown, unknown>) =>
 		result.andThen((username: unknown) => {

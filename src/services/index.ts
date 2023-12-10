@@ -1,2 +1,2 @@
-export * from "./bucket.services";
-export * from "./user.services";
+export * as BucketService from "./bucket.services";
+export * as UserService from "./user.services";
