@@ -5,23 +5,19 @@ import { UserMocks } from "@constants";
 describe("User Services", () => {
 
 	test("validating_user (should not fail)", () => {
-		const actualResult = UserService.validateUserPayload(UserMocks.mockCreateUserData);
+		const actualResult = UserService.validateUserPayload(UserMocks.createUserDto);
 		expect(actualResult.isErr()).toEqual(false);
-		expect(actualResult.unwrap()).toEqual(UserMocks.mockCreateUserData.username);
+		expect(actualResult.unwrap()).toEqual(UserMocks.createUserDto.username);
 	});
 
 	test("validating_user (should fail)", () => {
-		const badRequest = {
-			...UserMocks.mockCreateUserData,
-			username: null
-		};
-		const actualResult = UserService.validateUserPayload(badRequest);
+		const actualResult = UserService.validateUserPayload(UserMocks.invalidCreateUserDto);
 		expect(actualResult.isErr()).toEqual(true);
 		expect(actualResult.unwrapErr()).toEqual("");
 	});
 
 	test("check_user_existence (should exist)", () => {
-		const result = UserService.userExists(UserMocks.mockCreateUserData.username);
+		const result = UserService.userExists(UserMocks.createUserDto.username);
 		expect(result).toBe(true);
 	});
 

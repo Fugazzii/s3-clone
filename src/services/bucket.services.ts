@@ -1,31 +1,40 @@
+import { both, ifElse, isNil, pipe, prop, propSatisfies } from "ramda";
+import { BucketRepository } from "@repositories";
+import { CreateBucketDto } from "@dtos";
 import { Err, Ok, Result } from "@sniptt/monads";
-import { Bucket } from "../types";
-import { randomUUID } from "crypto";
 
-export const createBucket = (
-	newBucketOptions: Omit<Bucket, "id">
-): Result<Bucket, unknown> => {
-	try {
-		return Ok({
-			id: randomUUID(),
-			...newBucketOptions
-		});
-	} catch (error) {
-		return Err<Bucket, unknown>(error);
-	}
-};
+export const validatePayload = pipe(
+	(createBucketDto: CreateBucketDto) => ({
+		owner: createBucketDto.owner,
+		name: createBucketDto.name,
+	}),
+	ifElse(
+		both(
+			propSatisfies((value: CreateBucketDto) => !isNil(value), "owner"),
+			propSatisfies((value: CreateBucketDto) => !isNil(value), "name")
+		),
+		(validDto: CreateBucketDto) => Ok(validDto),
+		() => Err("Invalid input")
+	)
+);
 
-export const hasUniqueName = (
-	bucketName: string
-): Result<boolean, unknown> => {
-	return Ok(true);
-};
+const isMoreThanOne = (count: number) => count > 0 ? Ok(null) : Err("Bucket name already exists");
 
-export const validateBucketPayload = (
-	newUser: Omit<Bucket, "id">
-): Result<null, unknown> => {
-	if (!newUser.name) {
-		return Err(new Error("Name is required"));
-	}
-	return Ok(null);
-};
+const handleResult = (
+	res: Result<unknown, unknown>
+): unknown => res.unwrapOrElse((err) => {
+	throw err;
+});
+
+export const hasUniqueName = pipe(
+	prop("name"),
+	BucketRepository.selectBucketNameCount,
+	isMoreThanOne
+);
+
+export const create = pipe(
+	validatePayload,
+	handleResult,
+	hasUniqueName,
+	handleResult
+);

@@ -41,6 +41,9 @@
       ],
       "@dtos": [
         "./src/dtos"
+      ],
+      "@types": [
+        "./src/types"
       ]
     }
   }
