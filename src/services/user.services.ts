@@ -13,7 +13,7 @@ const joinStorageDir = (p: string): string => path.join(STORAGE_DIR, p);
 
 const userExists = (username: string): boolean => fs.existsSync(joinStorageDir(username));
 
-const validateUserPayload = (dto: CreateUserDto): Result<CreateUserDto, string> =>
+const validatePayload = (dto: CreateUserDto): Result<CreateUserDto, string> =>
 	dto.username ? Ok(dto) : Err("Username is required");
 
 const createUserFolderIfExists = (dto: CreateUserDto): Result<CreateUserDto, string> => {
@@ -31,7 +31,7 @@ const createUserFolderIfExists = (dto: CreateUserDto): Result<CreateUserDto, str
 };
 
 const create = pipe(
-	validateUserPayload,
+	validatePayload,
 	handleResult,
 	createUserFolderIfExists,
 	(result: Result<CreateUserDto, string>) => {
@@ -43,7 +43,7 @@ const create = pipe(
 
 export {
 	userExists,
-	validateUserPayload,
+	validatePayload,
 	createUserFolderIfExists,
 	create
 };

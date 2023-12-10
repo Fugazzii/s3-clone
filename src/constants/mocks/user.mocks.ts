@@ -14,7 +14,13 @@ export const createUserDto: CreateUserDto = {
 	username: someUser.username
 };
 
-export const invalidCreateUserDto: CreateUserDto = {
+export const missingUsernameCreateUserDto: CreateUserDto = {
 	...createUserDto,
 	username: ""
 };
+
+export const invalidUsernameCreateUserDto: CreateUserDto = {
+	...createUserDto,
+	username: "fakename"
+};
+
