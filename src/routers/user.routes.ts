@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { pipe, always } from "ramda";
 import { UserController } from "@controllers";
-import { routerOptions } from "../constants/other";
+import { Options } from "@constants";
 
 const pingRoute = (router: Router) => router.get("/ping", UserController.ping);
 const createUserRoute = (router: Router) => router.post("/user", UserController.create);
 
 export const init = pipe(
-	always(Router(routerOptions)),
+	always(Router(Options.routerOptions)),
 	createUserRoute,
 	pingRoute
 );

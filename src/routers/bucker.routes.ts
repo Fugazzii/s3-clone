@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { pipe, always } from "ramda";
-import { routerOptions } from "../constants/other";
+import { Options } from "@constants";
 
 const createBucketRoute = (router: Router) => router.post("/user", () => { });
 
 export const init = pipe(
-	always(Router(routerOptions)),
+	always(Router(Options.routerOptions)),
 	createBucketRoute
 );
