@@ -1,3 +1,3 @@
-import { User } from "../types";
+import { UserModel } from "@types";
 
-export type CreateUserDto = Omit<User, "id">;
+export type CreateUserDto = Omit<UserModel, "id">;

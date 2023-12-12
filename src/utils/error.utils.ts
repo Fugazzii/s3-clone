@@ -1,6 +1,6 @@
 import { Result } from "@sniptt/monads";
 
-export const handleResult = <S, E>(result: Result<S, E>) => {
+export const handleResult = <S, E>(result: Result<S, E>): S | never => {
 	return result.unwrapOrElse((err: E) => {
 		throw err;
 	});

@@ -6,7 +6,7 @@ export type Bucket = {
 	name: string;
 };
 
-export type BuckerModel = {
+export type BucketModel = {
 	id: number;
 	owner_id: number;
 	name: string;

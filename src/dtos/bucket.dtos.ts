@@ -1,3 +1,3 @@
-import { Bucket } from "../types";
+import { BucketModel } from "../types";
 
-export type CreateBucketDto = Omit<Bucket, "id">;
+export type CreateBucketDto = Omit<BucketModel, "id">;

@@ -1,12 +1,12 @@
 import { both, ifElse, pipe, prop, propSatisfies } from "ramda";
 import { BucketRepository } from "@repositories";
 import { CreateBucketDto } from "@dtos";
-import { Err, Ok } from "@sniptt/monads";
+import { Err, Ok, Result } from "@sniptt/monads";
 import { handleResult } from "@utils";
 
-const validatePayload = pipe(
+export const validatePayload = pipe(
 	(createBucketDto: CreateBucketDto) => ({
-		owner: createBucketDto.owner,
+		owner_id: createBucketDto.owner_id,
 		name: createBucketDto.name,
 	}),
 	ifElse(
@@ -18,23 +18,22 @@ const validatePayload = pipe(
 		() => Err("Invalid input")
 	)
 );
-const isMoreThanOne = (count: number) => count > 0 ? Ok(null) : Err("Bucket name already exists");
+export const isMoreThanOne = (count: number) => count > 0 ? Ok(null) : Err("Bucket name already exists");
 
-const hasUniqueName = pipe(
-	prop("name"),
-	BucketRepository.selectBucketNameCount,
-	isMoreThanOne
+export const hasUniqueName = pipe(
+	(createBucketDto: CreateBucketDto) => ({ dto: createBucketDto }),
+	({ dto }) => ({
+		dto,
+		isUnique: BucketRepository.selectBucketNameCount(dto.name) <= 0,
+	}),
+	(result) => (result.isUnique ? Ok(result.dto) : Err("Bucket name already exists"))
 );
 
-const create = pipe(
-	validatePayload,
-	handleResult,
-	hasUniqueName,
-	handleResult
-);
 
-export {
-	validatePayload,
-	hasUniqueName,
-	create
-};
+export const create = pipe(
+	validatePayload as (createBucketDto: CreateBucketDto) => Result<CreateBucketDto, string>,
+	handleResult as (result: Result<CreateBucketDto, string>) => CreateBucketDto,
+	hasUniqueName as (obj: CreateBucketDto) => Result<CreateBucketDto, string>,
+	handleResult as (result: Result<CreateBucketDto, string>) => CreateBucketDto,
+	BucketRepository.createBucket
+);
