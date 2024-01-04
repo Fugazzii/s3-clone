@@ -21,29 +21,20 @@
       "bun-types"
     ],
     "paths": {
-      "@controllers": [
-        "./src/controllers"
+      "@application": [
+        "./src/application"
       ],
-      "@constants": [
-        "./src/constants"
+      "@core/usecases": [
+        "./src/core/usecases"
       ],
-      "@routers": [
-        "./src/routers"
+      "@core/domain": [
+        "./src/core/domain"
       ],
-      "@services": [
-        "./src/services"
+      "@infrastructure": [
+        "./src/infrastructure"
       ],
-      "@repositories": [
-        "./src/repositories"
-      ],
-      "@utils": [
-        "./src/utils"
-      ],
-      "@dtos": [
-        "./src/dtos"
-      ],
-      "@types": [
-        "./src/types"
+      "@common": [
+        "./src/common"
       ]
     }
   }
